@@ -1,0 +1,29 @@
+# Environnement virtuel
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Fichiers de configuration de l'IDE
+.vscode/
+.idea/
+*.swp
+
+# Fichiers/dossiers Django
+*.log
+db.sqlite3
+/static/
+/media/
+
+# Migrations (optionnel si tu ne veux pas versionner les migrations)
+**/migrations/
+!*/migrations/__init__.py
+
+# Fichiers sensibles
+.env
+*.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
