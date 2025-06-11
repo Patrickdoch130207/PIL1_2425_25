@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma page d'inscription</title>
+  <link rel="stylesheet" href="{% static 'users/css/inscription.css' %}">
+</head>
+<body>
+  <div class="page">
+    <h1>Créer un compte GoVibe</h1>
+    <!-- Ajout d'un id au formulaire pour le ciblage en JS -->
+    <form method="post" action="{% url 'inscription' %}">
+        {% csrf_token %}
+      <input type="text" id="nom" name="nom" placeholder="Nom" required>
+      <input type="text" id="prenom" name="prenom" placeholder="Prenoms" required>
+      <input type="email" id="email" name="email" placeholder="Adresse e-mail" required>
+      <input type="tel" id="telephone" name="telephone" placeholder="Numéro de téléphone" required>
+      <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+      <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirmer le mot de passe" required>
+      <button type="submit">S'inscrire</button>
+      <p>Avez-vous déjà un compte ? <a href="/connexion/">Connexion</a></p>
+    </form>
+  </div>
+</body>
+</html>

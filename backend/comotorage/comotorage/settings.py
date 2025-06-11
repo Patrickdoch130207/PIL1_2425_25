@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
     'users',
+    'trajets',
 ]
 
 MIDDLEWARE = [
@@ -80,10 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'comotorage_db',
-        'USER': 'groupe25',
-        'PASSWORD': 'PIL1_2425_25',
-        'HOST':' localhost',
-        'PORT': '3306'
+        'USER':'chavez',
+        'PASSWORD':'chavez',
+        'HOST':'127.0.0.1',
+        'PORT':'3306',
     }
 }
 
@@ -129,7 +129,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000"
-]
+ASGI_APPLICATION='comotorage.asgi.application'
