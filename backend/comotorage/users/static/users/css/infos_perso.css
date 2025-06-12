@@ -1,0 +1,66 @@
+body{
+    font-family: sans-serif;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    
+}
+
+h1{
+    text-align: center;
+    text-decoration: underline;
+}
+
+input {
+  width: 30%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.champ{
+    margin-left: 200px;
+      
+}
+
+.champ1, .champ3, .champ5{
+    display: flex;
+}
+
+.champ2, .champ4, .champ6{
+    margin-left: 120px;
+}
+
+button {
+    
+  
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 40%;
+  padding: 11px 35px;
+  
+}
+
+button:hover{
+    background:#0056b3;
+}
+p{
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.bouton1{
+    margin-top: 30px;
+   
+}
+
+#bouton2{
+    margin-top: 30px;
+    margin-left: 30px;
+   
+}

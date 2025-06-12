@@ -8,6 +8,15 @@
   <link rel="stylesheet" href="{% static 'users/css/inscription.css' %}">
 </head>
 <body>
+
+  <div class="message-container">
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+  </div>
+
   <div class="page">
     <h1>Créer un compte GoVibe</h1>
     <!-- Ajout d'un id au formulaire pour le ciblage en JS -->
@@ -20,7 +29,7 @@
       <input type="password" id="password" name="password" placeholder="Mot de passe" required>
       <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirmer le mot de passe" required>
       <button type="submit">S'inscrire</button>
-      <p>Avez-vous déjà un compte ? <a href="/connexion/">Connexion</a></p>
+      <p>Avez-vous déjà un compte ? <a href="{% url 'connexion' %}">Connexion</a></p>
     </form>
   </div>
 </body>

@@ -9,11 +9,12 @@ body {
 
 .page {
   background: white;
-  padding: 30px;
+  padding: 50px;
   border-radius: 10px;
-  width: 500px;
+  width: 400px;
   box-shadow: 0 0 15px rgba(0,0,0,0.1);
   text-align: center;
+  height: 520px;
 }
 
 input {
@@ -22,27 +23,22 @@ input {
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
+  margin-top: 45px;
 }
 
-input.error   { 
-  border-color: #e32;
-  background: #fff8f8; 
-}
-
-.msg-error    { 
-  color: #e32; 
-  font-size: 0.85rem; 
-  margin-top: 0.2rem; 
-}
-
-button {
-  width: 70%;
+button{
+  width: 40%;
   padding: 10px;
   background: #007bff;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 50px;
+}
+
+.divider {
+  margin-top: 50px;
 }
 
 button:hover {
@@ -54,6 +50,10 @@ a {
   text-decoration: none;
 }
 
+p {
+  margin-top: 100px;
+}
+
 .message-container {
   position: absolute;
   top: 10px; 
@@ -61,7 +61,7 @@ a {
   transform: translateX(-50%);
   width: 80%;
   text-align: center;
-  z-index: 1000; 
+  z-index: 1000;
 }
 
 .message {
@@ -70,4 +70,7 @@ a {
   padding: 10px;
   border-radius: 5px;
 }
+
+
+
 
