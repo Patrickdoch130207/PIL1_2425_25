@@ -1,67 +1,8 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import utilisateurs
-
-# Create your views here.
-
-#Gestion de la page d'accueil
-
-def accueil(request):
-    return render(request,'users/accueil.html')
-
-#Gestion de la page home
-
-def home(request):
-    return render(request,'users/home.html')
-
-#Gestion de la page d'inscription
-
-def inscription(request):
-    if request.method == 'POST':
-        nom = request.POST.get('nom')
-        prenom = request.POST.get('prenom')
-        email = request.POST.get('email')
-        telephone = request.POST.get('telephone')
-        password = request.POST.get('password')
-        password_confirm = request.POST.get('password_confirm')
-
-        # Vérification des mots de passe
-        if password != password_confirm:
-            messages.error(request, "Les mots de passe ne correspondent pas.")
-            return redirect('inscription')
-
-        # Vérification de l'existence de l'email
-        if utilisateurs.objects.filter(email=email).exists():
-            messages.error(request, "Cet email est déjà utilisé.")
-            return redirect('inscription')
-
-        # Création de l'utilisateur de base dans Django
-        if password:
-           user = User.objects.create_user(username=email, email=email, password=password)
-           user.set_password(password)
-           user.save()
-
-        # Enregistrement des informations complémentaires dans le modèle utilisateurs
-        user_info = utilisateurs.objects.create(
-            user=user,
-            nom=nom,
-            prenom=prenom,
-            email=email,
-            telephone=telephone,
-            password=user.password,
-        )
-        user_info.save()
-
-        login(request, user)
-        messages.success(request, "Votre inscription a bien réussi.")
-        return redirect("home")  
-            
-    return render(request,'users/inscription.html')
-
-#Gestion de la connexion
-
+from django.contrib.auth.decorators import login_required
+from .form import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth import authenticate,login,update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView,PasswordResetConfirmView,PasswordResetCompleteView
@@ -70,24 +11,40 @@ from users.models import PasswordResetCode
 import random
 from django.core.mail import send_mail
 
+def accueil(request):
+    return render(request, 'users/accueil.html')
+
+def inscription(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Votre compte a été créé avec succès!')
+            return redirect('connexion')  
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'users/inscription.html', {'form': form})
+
 def connexion(request):
-    if request.method=='POST':
-        email=request.POST.get('email')
-        password=request.POST.get('password')
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('dashboard')
+            else:
+                messages.error(request, 'E-mail ou mot de passe incorrect.')
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'users/connexion.html', {'form': form})
 
-        try:
-            user=User.objects.get(email=email)
-            user=authenticate(request,username=user.username,password=password)
-        except User.DoesNotExist:
-            user=None
+@login_required
+def dashboard(request):
+    return render(request, 'users/dashboard.html')
 
-        if user is not None:
-            login(request,user)
-            messages.success(request,'Connexion reussie!')
-            return redirect('home')
-        else:
-            messages.error(request,'Email ou mot de passe incorrect')
-    return render(request,'users/connexion.html')
 
 #Mot de passe oublie
 
@@ -149,3 +106,12 @@ def reset_password(request,id):
         else:
             messages.error(request,'Les mots de passe ne correspondent pas')
     return render(request,'users/reset_password.html',{'user':user})
+
+def deconnexion(request):
+    logout(request)
+    messages.success(request, 'Vous avez été déconnecté avec succès.')
+    return redirect('accueil')
+
+
+
+

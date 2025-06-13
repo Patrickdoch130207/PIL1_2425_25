@@ -79,9 +79,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'comotorage_db',
-        'USER':'chavez',
-        'PASSWORD':'chavez',
-        'HOST':'127.0.0.1',
+        'USER':'groupe25',
+        'PASSWORD':'PIL1_2425_25',
+        'HOST':'localhost',
         'PORT':'3306',
     }
 }
@@ -129,3 +129,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ASGI_APPLICATION='comotorage.asgi.application'
+
+#  pour utiliser notre modèle personnalisé
+AUTH_USER_MODEL = 'users.Utilisateur'  
+
+# Configuration pour la redirection après connexion
+LOGIN_URL = '/connexion/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/accueil/'

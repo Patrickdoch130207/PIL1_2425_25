@@ -25,4 +25,11 @@ class PasswordResetCode(models.Model):
     def generate_code(self):
         self.code=str(random.randint(100000,999999))
         self.save()
-     
+
+    # Utiliser l'email comme identifiant de connexion
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nom', 'prenom']
+    
+    def __str__(self):
+        return f"{self.prenom} {self.nom}"
+

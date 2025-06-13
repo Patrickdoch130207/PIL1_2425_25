@@ -1,73 +1,345 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
-  font-family: sans-serif;
-  background: #f1f1f1;
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.page {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  width: 500px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  text-align: center;
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    animation: slideIn 0.6s ease-out;
+    padding: 0;
 }
 
+.logo {
+    background: #ffffff;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 10px solid #135ec0;
+}
+
+.logo img {
+    max-width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0;
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+    padding: 0 30px;
+}
+
+/* Styles pour les messages Django */
+.alert {
+    padding: 15px;
+    margin: 20px 30px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+/* Styles pour le formulaire */
+form {
+    padding: 0 30px 20px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #135ec0;
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Styles pour tous les inputs Django */
+input[type="text"],
+input[type="email"],
+input[type="password"],
 input {
-  width: 70%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
-input.error   { 
-  border-color: #e32;
-  background: #fff8f8; 
+input:focus {
+    border-color: #135ec0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 149, 121, 0.1);
 }
 
-.msg-error    { 
-  color: #e32; 
-  font-size: 0.85rem; 
-  margin-top: 0.2rem; 
+input:valid {
+    border-color: #28a745;
 }
 
-button {
-  width: 70%;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+/* Style pour le bouton */
+button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: #135ec0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 15px;
 }
 
-button:hover {
-  background: #0056b3;
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 149, 121, 0.3);
+    background: rgb(52, 138, 218);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Styles pour les erreurs Django */
+.error {
+    background-color: #dc3545;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    text-align: center;
+    display: block;
+}
+
+/* Conteneur pour les liens en bas */
+.container > p {
+    text-align: center;
+    margin: 15px 30px 5px;
+    color: #666;
+    padding-bottom: 20px;
+}
+
+.container > p:first-of-type {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e8ed;
+}
+
+.container > p:last-of-type {
+    margin-bottom: 30px;
 }
 
 a {
-  color: #007bff;
-  text-decoration: none;
+    color: #135ec0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-.message-container {
-  position: absolute;
-  top: 10px; 
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  text-align: center;
-  z-index: 1000; 
+
+a:hover {
+    color: #135ec0;
+    text-decoration: underline;
 }
 
-.message {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  border-radius: 5px;
+/* Animation d'entrée */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0;
+        border-radius: 10px;
+    }
+
+    .logo {
+        padding: 20px;
+    }
+
+    .logo img {
+        max-width: 120px;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin: 25px 0;
+        padding: 0 20px;
+    }
+
+    form {
+        padding: 0 20px 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    button[type="submit"] {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .alert {
+        margin: 20px 20px;
+        padding: 12px;
+    }
+
+    .container > p {
+        margin: 15px 20px 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        padding: 15px;
+    }
+
+    .logo img {
+        max-width: 100px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin: 20px 0;
+        padding: 0 15px;
+    }
+
+    form {
+        padding: 0 15px 15px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button[type="submit"] {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .alert {
+        margin: 15px 15px;
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .container > p {
+        margin: 12px 15px 3px;
+        font-size: 14px;
+    }
+
+    .container > p:last-of-type {
+        margin-bottom: 20px;
+    }
+}
+
+/* Styles spécifiques pour améliorer l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible pour l'accessibilité */
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid #135ec0;
+    outline-offset: 2px;
 }
 
