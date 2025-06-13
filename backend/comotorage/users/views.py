@@ -10,6 +10,9 @@ from django.urls import reverse_lazy
 from users.models import PasswordResetCode
 import random
 from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def accueil(request):
     return render(request, 'users/accueil.html')

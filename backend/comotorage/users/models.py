@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 import random
+from django.conf import settings
+
 
 # Create your models here.
-
-class  utilisateurs(models.Model):
+class Utilisateur(AbstractUser):
     id=models.AutoField(primary_key=True)
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank= True)
     nom=models.CharField(max_length=100)
     prenom=models.CharField(max_length=100)
     email=models.EmailField(unique=True)
@@ -16,9 +18,12 @@ class  utilisateurs(models.Model):
     pays=models.CharField(max_length=100,blank=True,null=True)
     sexe=models.CharField(max_length=10,choices=[('Homme','Homme'),('Femme','Femme')],blank=True,null=True)
     photo_profil=models.ImageField(upload_to='',blank=True,null=True)
+    
+
+
 
 class PasswordResetCode(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     code=models.CharField(max_length=6)
     created_at=models.DateTimeField(auto_now_add=True)
 
@@ -33,3 +38,6 @@ class PasswordResetCode(models.Model):
     def __str__(self):
         return f"{self.prenom} {self.nom}"
 
+
+
+user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
