@@ -1,11 +1,11 @@
 from django.db import models
-
-# Create your models here.
+from django.conf import settings
 
 #Modele pour la gestion des trajets cote conducteur
 class Trajet(models.Model):
+
     id=models.AutoField(primary_key=True)
-    conducteur=models.ForeignKey('users.utilisateurs',on_delete=models.CASCADE,related_name='trajets_conduits')
+    conducteur=models.ForeignKey('users.Utilisateur',on_delete=models.CASCADE,related_name='trajets_conduits')
     point_depart=models.CharField(max_length=100)
     destination=models.CharField(max_length=100)
     date_depart=models.DateField()
@@ -23,7 +23,9 @@ class Trajet(models.Model):
     preferences = models.JSONField(default=dict) 
 
     #Relation avec le modele utilisateurs
-    passagers=models.ManyToManyField('users.utilisateurs',blank=True,related_name='trajet_reserves')
+    passagers=models.ManyToManyField('users.Utilisateur',blank=True,related_name='trajet_reserves')
+
+
 
 
 #Modele pour la gestion des trajets cote passager
@@ -52,4 +54,3 @@ class DemandeTrajet(models.Model):
     def __str__(self):
         return f"{self.utilisateur.username} - {self.point_depart} à {self.destination}"
 
-    
