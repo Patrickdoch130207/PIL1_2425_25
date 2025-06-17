@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from users.models import utilisateurs
 
 #Modele pour la gestion des trajets cote conducteur
 class Trajet(models.Model):
@@ -11,6 +12,10 @@ class Trajet(models.Model):
     date_depart=models.DateField()
     heure_depart=models.TimeField(auto_now=False,auto_now_add=False)
     date_depart = models.DateField()
+    depart_longitude=models.FloatField(null=True)
+    depart_latitude=models.FloatField(null=True)
+    dest_longitude=models.FloatField(null=True)
+    dest_latitude=models.FloatField(null=True)
     sieges_dispo=models.IntegerField()
     prix=models.IntegerField(null=True)
     type_vehicule=models.CharField(max_length=50,blank=True,null=True)
@@ -20,6 +25,12 @@ class Trajet(models.Model):
 
     #Relation avec le modele utilisateurs
     passagers=models.ManyToManyField('users.utilisateurs',blank=True,related_name='trajet_reserves')
+
+    def sieges_occupees(self):
+        return self.reservations.filter(statut__in=['en_attente', 'acceptee']).count()
+
+    def est_complet(self):
+        return self.sieges_occupees() >= self.sieges_dispo
 
 
 
@@ -34,7 +45,11 @@ class DemandeTrajet(models.Model):
     destination = models.CharField(max_length=255)
     date_depart = models.DateField()
     heure_depart = models.TimeField(auto_now=False,auto_now_add=False)
-    date_depart = models.DateField()
+    date_depart = models.DateField(null=False)
+    depart_longitude=models.FloatField(null=True)
+    depart_latitude=models.FloatField(null=True)
+    dest_longitude=models.FloatField(null=True)
+    dest_latitude=models.FloatField(null=True)
     statut = models.CharField(max_length=20, choices=[
         ("en_attente", "En attente"),
         ("acceptée", "Acceptée"),
@@ -46,3 +61,14 @@ class DemandeTrajet(models.Model):
     def __str__(self):
         return f"{self.utilisateur.username} - {self.point_depart} à {self.destination}"
 
+#Modele pour la gestion des reservations
+
+class Reservation(models.Model):
+    trajet = models.ForeignKey(Trajet, on_delete=models.CASCADE, related_name="reservations")
+    passager = models.ForeignKey(utilisateurs, on_delete=models.CASCADE)
+    statut = models.CharField(max_length=20, choices=[
+        ('en_attente', 'En attente'),
+        ('acceptee', 'Acceptée'),
+        ('refusee', 'Refusée')
+    ], default='en_attente')
+    date_reservation = models.DateTimeField(auto_now_add=True)

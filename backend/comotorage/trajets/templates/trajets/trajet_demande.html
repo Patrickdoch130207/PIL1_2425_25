@@ -20,10 +20,10 @@
     </div>
     
     <div class="container">
-        <h1>Détail d'un trajet</h1>
-        <h2>Demander un trajet</h2>
+        
+        <h1>Demander un trajet</h1>
 
-        <form class="formulaire" method="get">
+        <form class="formulaire" method="post" action="{% url 'creer_demande_trajet' %}">
             {% csrf_token %}
 
             <label for="depart">Quelle est votre point de depart?</label>

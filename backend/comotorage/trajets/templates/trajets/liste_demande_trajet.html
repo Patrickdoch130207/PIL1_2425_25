@@ -23,10 +23,11 @@
                     <div class="end">
                        <button class="suppression"><a href="{% url 'supprimer_demande_trajet' demande.id %}">Supprimer</a></button>
                        <button class="modifier"><a href="{% url 'modifier_demande_trajet' demande.id %}">Modifier</a></button>
+                       <button class="recherche"><a href="{% url 'matching_trajets'  demande.id %}">Rechercher</a></button>
                     </div>
                 </div>
             {% empty %}
-                <p>Aucun trajet disponible pour le moment.</p>
+                <p> Vous n'avez effectué aucune demande de trajet pour le moment.</p>
             {% endfor %}
         </section>
     </main>

@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des demandes de trajet</title>
+</head>
+<body>
+    <link rel="stylesheet" href="{% static 'trajets/css/gerer_reservations.css' %}">
+
+  <div class="reservation-container">
+      <h2>Demandes en attente</h2>
+      {% if demandes %}
+        <table>
+           <thead>
+              <tr>
+                  <th>Passager</th>
+                  <th>Trajet</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+              </tr>
+           </thead>
+           <tbody>
+               {% for demande in demandes %}
+                   <tr>
+                       <td>{{ demande.passager.user.username }}</td>
+                       <td>{{ demande.trajet.point_depart }} → {{ demande.trajet.destination }}</td>
+                       <td>{{ demande.date_reservation|date:"d/m/Y H:i" }}</td>
+                       <td>
+                          <a class="btn accept" href="{% url 'traiter_reservation' demande.id 'accepter' %}">✔️ Accepter</a>
+                          <a class="btn decline" href="{% url 'traiter_reservation' demande.id 'refuser' %}">❌ Refuser</a>
+                       </td>
+                  </tr>
+               {% endfor %}
+           </tbody>
+        </table>
+       {% else %}
+           <p>Aucune demande de réservation en attente.</p>
+       {% endif %}
+   </div>
+
+
+</body>
+</html>

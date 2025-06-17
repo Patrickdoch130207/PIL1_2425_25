@@ -18,17 +18,17 @@
                 <div class="trajet">
                     <h2>Départ: {{ trajet.point_depart }}</h2>
                     <p>Destination: {{ trajet.destination }}</p>
-                    <p>Date: {{ trajet.date_depart }}</p>
+                    <p>Date: {{ trajet.date_depart|date:"d M Y" }}</p>
                     <p>Heure: {{ trajet.heure_depart }}</p>
                     <p>Places disponibles: {{ trajet.sieges_dispo }}</p>
                     <div class="end">
-                        <button class="reserver"><a href="{% url 'supprimer_trajet' trajet.id %}">Supprimer</a></button>
-                        <button class="reserver2"><a href="{% url 'modifier_trajet_propose' trajet.id %}">Modifier</a></button>
+                        <button class="suppression"><a href="{% url 'supprimer_trajet' trajet.id %}">Supprimer</a></button>
+                        <button class="modifier"><a href="{% url 'modifier_trajet_propose' trajet.id %}">Modifier</a></button>
                     </div>
                     
                 </div>
             {% empty %}
-                <p>Aucun trajet disponible pour le moment.</p>
+                <p>Vous n'avez effectué aucune proposition de trajet pour le moment.</p>
             {% endfor %}
         </section>
     </main>
