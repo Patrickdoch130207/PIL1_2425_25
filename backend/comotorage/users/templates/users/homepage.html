@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'acceuil</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'users/css/homepage.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">
+            <a href="{% url 'users:homepage' %}"><img src="{% static 'users/images/logo_govibe.png' %}" alt="Logo GoVibe"></a>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="fas fa-user"></i>Profile
+            </a>
+            <a href="{% url 'conversation_list' %}" class="menu-item">
+                <i class="fas fa-envelope"></i>Messages
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-chart-bar"></i>Proposer un trajet
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-tasks"></i>Trajets proposés
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-users"></i>Réservations
+            </a>
+            <hr style="border-color: #2d3748; margin: 1rem 0;">
+            <div class="px-3 py-2">
+                <small class="text-muted">GENERAL</small>
+            </div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-bell"></i>Notifications
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>Paramètres
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>Déconnexion
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="d-flex align-items-center flex-grow-1">
+                <button class="btn btn-link d-md-none me-3" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 class="mb-0 me-4"></h2>
+                <div class="search-bar flex-grow-1 me-4">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" placeholder="Rechercher un trajet...">
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Message Icon -->
+                <div class="message-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                
+                <!-- User Profile -->
+                <div class="user-profile d-flex align-items-center">
+                    <div class="user-avatar">
+                        <img src="https://via.placeholder.com/40x40" alt="Photo de profil" class="profile-img">
+                    </div>
+                    <div class="user-info ms-2 d-none d-sm-block">
+                        <div class="user-name">Jean Dupont</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="row mb-4">
+           <!-- Contenu à ajouter ici -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'users/js/homepage.js' %}"></script>
+</body>
+</html>

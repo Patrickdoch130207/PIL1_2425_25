@@ -23,7 +23,7 @@ def inscription(request):
         if form.is_valid():
             user = form.save()
             messages.success(request, 'Votre compte a été créé avec succès!')
-            return redirect('connexion')  
+            return redirect('users:connexion')  
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/inscription.html', {'form': form})
@@ -37,7 +37,7 @@ def connexion(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')
+                return redirect('users:homepage')
             else:
                 messages.error(request, 'E-mail ou mot de passe incorrect.')
     else:
@@ -45,8 +45,9 @@ def connexion(request):
     return render(request, 'users/connexion.html', {'form': form})
 
 @login_required
-def dashboard(request):
-    return render(request, 'users/dashboard.html')
+def homepage(request):
+    return render(request,'users/homepage.html')  # ✅ redirige vers la page d'accueil 
+
 
 
 #Mot de passe oublie
@@ -64,7 +65,7 @@ def send_reset_code(request):
             send_mail(
                 'Code de reinitialisation',
                 f'Votre code de reinitialisation est: {reset_code.code}',
-                'govibe@gmail.com',
+                'govibe960@gmail.com',
                 [user.email],
                 fail_silently=False,
             )

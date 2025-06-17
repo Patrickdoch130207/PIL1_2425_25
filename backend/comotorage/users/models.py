@@ -8,7 +8,6 @@ from django.conf import settings
 # Create your models here.
 class Utilisateur(AbstractUser):
     id=models.AutoField(primary_key=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank= True)
     nom=models.CharField(max_length=100)
     prenom=models.CharField(max_length=100)
     email=models.EmailField(unique=True)
@@ -40,4 +39,4 @@ class PasswordResetCode(models.Model):
 
 
 
-user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+

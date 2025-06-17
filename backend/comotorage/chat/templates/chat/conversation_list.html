@@ -1,0 +1,68 @@
+{%load static%}
+<!DOCTYPE html{}>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Conversations</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'chat/css/conversation_list.css' %}">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- En-tête -->
+        <div class="chat-header">
+            <h4><i class="fas fa-comments me-2"></i>Conversations</h4>
+            <input type="text" class="search-bar" id="searchInput" placeholder="Rechercher une conversation...">
+        </div>
+        <!-- Liste des conversations -->
+        
+<div class="conversations-list" id="conversationsList">
+    {% if conversations %}
+        {% for conv in conversations %}
+            <div>
+                <a href="{% url 'conversation_detail' conv.user.email %}">
+                    <b>{{ conv.user.nom }} {{ conv.user.prenom }}</b> : {{ conv.last_message.content }}
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-comment-slash"></i>
+            <h5>Aucune conversation</h5>
+            <p>Commencez une nouvelle conversation en cliquant sur le bouton + ci-dessous</p>
+        </div>
+    {% endif %}
+</div>
+
+
+    <!-- Bouton pour nouvelle conversation -->
+    <button class="add-chat-btn" data-bs-toggle="modal" data-bs-target="#newChatModal">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Modal pour nouvelle conversation -->
+    <div class="modal fade" id="newChatModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nouvelle conversation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="userSearchInput" placeholder="Rechercher un utilisateur...">
+                    </div>
+                    <div id="usersList">
+                        <!-- Liste des utilisateurs disponibles -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'chat/js/conversation_list.js' %}"></script>
+</body>
+</html>

@@ -1,24 +1,76 @@
-{% load static %}
+{%load static%}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma page d'accueil</title>
+    <title>GoVibe - Partagez vos trajets étudiants</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome pour les icônes -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{% static 'users/css/accueil.css' %}">
 </head>
 <body>
-    <div>
-        <div class="logo">
-            <img src="{% static 'users/images/logo_govibe.png' %}" alt="Logo GoVibe">
+    <!-- Particules animées -->
+    <div class="particles" id="particles"></div>
+
+    <div class="main-container">
+        <div class="welcome-card">
+            <div class="logo">
+                <img src="{% static 'users/images/logo_govibe.png' %}" alt="Logo GoVibe" class="img-fluid">
+            </div>
+            
+            <h1 class="main-title">Bienvenue sur GoVibe</h1>
+            
+            <img src="{% static 'users/images/accueil.png' %}" alt="Illustration accueil" class="hero-image img-fluid">
+            
+            <p class="description">
+                Partagez et planifiez des trajets avec des étudiants et <strong>gagnez du temps et de l'argent</strong>. 
+                Rejoignez notre communauté pour des déplacements économiques et écologiques !
+            </p>
+
+            <!-- Fonctionnalités -->
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="feature-text">Trajets partagés</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="feature-text">Économisez</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="feature-text">Communauté</div>
+                </div>
+            </div>
+            
+            <a href="{% url 'users:inscription' %}" class="cta-button">
+                <i class="fas fa-user-plus me-2"></i>
+                Créer un compte
+            </a>
+            
+            <p class="login-link">
+                Vous avez déjà un compte ? 
+                <a href="{% url 'users:connexion' %}"><i class="fas fa-sign-in-alt me-1"></i>Connectez-vous</a>
+            </p>
         </div>
-        <h1>Bienvenue sur GoVibe</h1>
-        <p>Partagez et planifiez des trajets avec des étudiants et gagnez du temps et de l'argent. <strong>Créez un compte pour commencer</strong></p>
-        <button type="submit">
-            <a href="{% url 'inscription' %}" class="lien1">Créer un compte</a>
-        </button>
-        <p>Avez-vous déjà un compte? <a href="{% url 'connexion' %}">Connectez-vous</a></p>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="{% static 'users/js/accueil.js' %}"></script>
 </body>
->
 </html>

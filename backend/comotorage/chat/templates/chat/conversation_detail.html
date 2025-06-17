@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversation avec {{ receiver.prenom }} {{ receiver.nom }} </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'chat/css/conversation_detail.css' %}">
+</head>
+<body>
+<div class="container py-3">
+    <div class="chat-header mb-3">
+        <h5><i class="fas fa-user-circle"></i> {{ receiver.nom }} {{ receiver.prenom }}</h5>
+        <a href="{% url 'conversation_list' %}" class="btn btn-secondary btn-sm">Retour</a>
+    </div>
+    <div class="chat-messages mb-3" id="chatMessages" style="height: 400px; overflow-y: auto;">
+    {% for msg in messages %}
+        <div class="message {% if msg.sender == user %}sent{% else %}received{% endif %}">
+            <div class="msg-content">{{ msg.content }}</div>
+            <div class="msg-date text-muted small">{{ msg.timestamp|date:"d/m/Y H:i" }}</div>
+        </div>
+    {% endfor %}
+</div>
+{% if not messages %}
+    <div class="text-center text-muted">Aucun message dans cette conversation.</div>
+{% endif %}
+    
+    <form id="messageForm" class="d-flex" autocomplete="off">
+    <input type="text" id="messageInput" class="form-control me-2" placeholder="Tapez un message..." required>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+</form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+});
+</script>
+<script >
+    document.addEventListener('DOMContentLoaded', function() {
+    // Scroll auto
+    var chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // WebSocket
+    const receiverEmail = "{{ receiver.email }}";
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws_url = `${ws_scheme}://${window.location.host}/ws/chat/${encodeURIComponent(receiverEmail)}/`;
+    const chatSocket = new WebSocket(ws_url);
+
+    const form = document.getElementById('messageForm');
+    const input = document.getElementById('messageInput');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value.trim() !== "") {
+            chatSocket.send(JSON.stringify({
+                'message': input.value
+            }));
+            input.value = "";
+        }
+    });
+
+    // Affichage en temps réel (optionnel, à adapter selon ton backend)
+        chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.message) {
+            const msgDiv = document.createElement('div');
+            // Compare l'expéditeur avec l'utilisateur courant
+            if (data.sender === "{{ user.email }}") {
+                msgDiv.className = "message sent";
+            } else {
+                msgDiv.className = "message received";
+            }
+            msgDiv.innerHTML = `<div class="msg-content">${data.message}</div>
+                                <div class="msg-date text-muted small">${data.timestamp || ''}</div>`;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    };
+});
+
+</script>
+</body>
+</html>
