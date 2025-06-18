@@ -90,8 +90,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'comotorage_db',
-        'USER':'chavez',
-        'PASSWORD':'chavez',
+        'USER':'groupe25',
+        'PASSWORD':'PIL1_2425_25',
         'HOST':'127.0.0.1',
         'PORT':'3306',
     }

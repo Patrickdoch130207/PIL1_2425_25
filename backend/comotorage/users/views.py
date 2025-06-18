@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth import authenticate, login,logout,update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -39,6 +39,12 @@ def connexion(request):
     else:
         form = CustomAuthenticationForm()
     return render(request, 'users/connexion.html', {'form': form})
+
+
+
+def deconnexion(request):
+    logout(request)
+    return redirect('users:accueil')
 
 @login_required
 def homepage(request):

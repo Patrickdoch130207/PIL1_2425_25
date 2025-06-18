@@ -1,12 +1,12 @@
 from django.db import models
 from django.conf import settings
-from users.models import utilisateurs
+from users.models import Utilisateur
 
 #Modele pour la gestion des trajets cote conducteur
 class Trajet(models.Model):
 
     id=models.AutoField(primary_key=True)
-    conducteur=models.ForeignKey('users.utilisateurs',on_delete=models.CASCADE,related_name='trajets_conduits')
+    conducteur=models.ForeignKey('users.Utilisateur',on_delete=models.CASCADE,related_name='trajets_conduits')
     point_depart=models.CharField(max_length=100)
     destination=models.CharField(max_length=100)
     date_depart=models.DateField()
@@ -24,7 +24,7 @@ class Trajet(models.Model):
     preferences = models.JSONField(default=dict) 
 
     #Relation avec le modele utilisateurs
-    passagers=models.ManyToManyField('users.utilisateurs',blank=True,related_name='trajet_reserves')
+    passagers=models.ManyToManyField('users.Utilisateur',blank=True,related_name='trajet_reserves')
 
     def sieges_occupees(self):
         return self.reservations.filter(statut__in=['en_attente', 'acceptee']).count()
@@ -40,7 +40,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class DemandeTrajet(models.Model):
-    passager = models.ForeignKey('users.utilisateurs', on_delete=models.CASCADE, related_name="demandes_trajet")
+    passager = models.ForeignKey('users.Utilisateur', on_delete=models.CASCADE, related_name="demandes_trajet")
     point_depart = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
     date_depart = models.DateField()
@@ -65,7 +65,7 @@ class DemandeTrajet(models.Model):
 
 class Reservation(models.Model):
     trajet = models.ForeignKey(Trajet, on_delete=models.CASCADE, related_name="reservations")
-    passager = models.ForeignKey(utilisateurs, on_delete=models.CASCADE)
+    passager = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
     statut = models.CharField(max_length=20, choices=[
         ('en_attente', 'En attente'),
         ('acceptee', 'Acceptée'),

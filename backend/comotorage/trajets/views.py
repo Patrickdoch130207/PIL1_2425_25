@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from trajets.models import Trajet
 from django.contrib.auth import login
 from django.contrib import messages
-from users.models import utilisateurs
+from users.models import Utilisateur
 from .utils.geocoding import geocode
 
 
@@ -19,7 +19,7 @@ def creer_trajet(request):
         date_depart=request.POST.get('date')
         heure_depart=request.POST.get('heure')
         sieges_dispo=request.POST.get('sieges_dispo')
-        conducteur=utilisateurs.objects.get(user=request.user)
+        conducteur=Utilisateur.objects.get(user=request.user)
 
         if point_depart and destination and date_depart and heure_depart:
            lat_dep,lon_dep = geocode(point_depart)
@@ -50,12 +50,12 @@ def creer_trajet(request):
 #Liste des trajets 
 
 def liste_trajets(request):
-    utilisateur=utilisateurs.objects.get(user=request.user)
+    utilisateur=Utilisateur.objects.get(user=request.user)
     trajets=Trajet.objects.filter(conducteur=utilisateur)
     return render(request,'trajets/liste_trajets.html',{'trajets':trajets})
 
 def liste_demande_trajet(request):
-    utilisateur=utilisateurs.objects.get(user=request.user)
+    utilisateur=Utilisateur.objects.get(user=request.user)
     demandes=DemandeTrajet.objects.filter(passager=utilisateur)
     return render(request,'trajets/liste_demande_trajet.html',{'demandes':demandes})
 
@@ -94,7 +94,7 @@ def creer_demande_trajet(request):
                 return render(request, 'trajets/trajet_demande.html')
            
            DemandeTrajet.objects.create(
-                passager=utilisateurs.objects.get(user=request.user),
+                passager=Utilisateur.objects.get(user=request.user),
                 point_depart=point_depart,
                 destination=destination,
                 date_depart=date_depart,
@@ -119,7 +119,7 @@ from trajets.models import Trajet,Reservation
 @login_required
 def reserver_trajet(request, trajet_id):
     trajet = get_object_or_404(Trajet, id=trajet_id)
-    utilisateur=utilisateurs.objects.get(user=request.user)
+    utilisateur=Utilisateur.objects.get(user=request.user)
     if utilisateur in trajet.passagers.all():
         messages.info(request,'Vous avez déjà réservé ce trajet.')
 
@@ -135,7 +135,7 @@ def reserver_trajet(request, trajet_id):
 
 @login_required
 def mes_reservations(request):
-    utilisateur = utilisateurs.objects.get(user=request.user)
+    utilisateur = Utilisateur.objects.get(user=request.user)
     reservations = Reservation.objects.filter(passager=utilisateur,statut='acceptee')
 
     return render(request, 'trajets/mes_reservations.html', {
@@ -145,7 +145,7 @@ def mes_reservations(request):
 @login_required
 def annuler_reservation(request,id):
     reservation = get_object_or_404(Reservation,id=id)
-    utilisateur = utilisateurs.objects.get(user=request.user)
+    utilisateur = Utilisateur.objects.get(user=request.user)
 
     if reservation.passager == utilisateur and reservation.statut == 'acceptee':
         reservation.delete()
@@ -157,7 +157,7 @@ def annuler_reservation(request,id):
 
 @login_required
 def gerer_reservations(request):
-    utilisateur = utilisateurs.objects.get(user=request.user)
+    utilisateur = Utilisateur.objects.get(user=request.user)
     trajets = Trajet.objects.filter(conducteur=utilisateur)
     demandes = Reservation.objects.filter(trajet__in=trajets, statut='en_attente')
 
@@ -168,7 +168,7 @@ def gerer_reservations(request):
 @login_required
 def traiter_reservation(request, reservation_id, action):
     reservation = get_object_or_404(Reservation, id=reservation_id)
-    if reservation.trajet.conducteur != utilisateurs.objects.get(user=request.user):
+    if reservation.trajet.conducteur != Utilisateur.objects.get(user=request.user):
         messages.error(request, "Action non autorisée.")
         return redirect('gerer_reservations')
 
@@ -192,7 +192,7 @@ def traiter_reservation(request, reservation_id, action):
 @login_required
 def modifier_trajet_propose(request, id):
     trajet = get_object_or_404(Trajet, id=id)
-    conducteur = utilisateurs.objects.get(user=request.user)
+    conducteur = Utilisateur.objects.get(user=request.user)
 
     # S'assurer que seul le conducteur du trajet peut modifier
     if trajet.conducteur != conducteur:
@@ -238,7 +238,7 @@ def modifier_trajet_propose(request, id):
 
 def modifier_demande_trajet(request, id):
     demande = get_object_or_404(DemandeTrajet, id=id)
-    passager = utilisateurs.objects.get(user=request.user)
+    passager = Utilisateur.objects.get(user=request.user)
 
     # Verifier si le passager est bien l’auteur de la demande
     if demande.passager != passager:
@@ -279,7 +279,7 @@ def modifier_demande_trajet(request, id):
 #Algorithme de matching
 
 from .models import Trajet, DemandeTrajet
-from users.models import utilisateurs
+from users.models import Utilisateur
 from .utils.osrm import get_osrm_route_info
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
@@ -287,7 +287,7 @@ from datetime import datetime, timedelta
 @login_required
 def matching_trajets(request, id):
     demande = DemandeTrajet.objects.get(id=id)
-    utilisateur = utilisateurs.objects.get(user=request.user)
+    utilisateur = Utilisateur.objects.get(user=request.user)
 
     #Geocodage
     if not demande.depart_latitude or not demande.depart_longitude:

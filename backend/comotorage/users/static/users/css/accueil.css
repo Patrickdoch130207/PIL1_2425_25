@@ -92,13 +92,7 @@
             margin-bottom: 2rem;
             animation: logoEntrance 1s ease-out;
         }
-        .logo img {
-        max-width: 300px;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-
-}
+       
 
         @keyframes logoEntrance {
             from {
@@ -112,19 +106,18 @@
         }
 
         .logo img {
-            width: 80px;         /* adapte la taille ici selon connexion.html */
-            max-width: 100%;     /* pour la réactivité */
-            height: auto;
-            display: block;
-            margin: 0 auto;
-            object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
-            transition: transform 0.3s ease;
-        }
-        .logo img:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s ease;
+}
 
+.logo img:hover {
+    transform: scale(1.1) rotate(5deg);
+}
         .main-title {
             color: #333;
             font-weight: 700;
