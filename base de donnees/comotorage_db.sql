@@ -1,4 +1,5 @@
 CREATE DATABASE comotorage_db;
+USE comotorage_db;
 CREATE TABLE utilisateur (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
