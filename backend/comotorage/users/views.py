@@ -7,6 +7,8 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from users.models import PasswordResetCode
 import random
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from .forms import InfosPersoForm
 
 User = get_user_model()
 
@@ -24,6 +26,8 @@ def inscription(request):
         form = CustomUserCreationForm()
     return render(request, 'users/inscription.html', {'form': form})
 
+
+
 def connexion(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request.POST)
@@ -33,6 +37,9 @@ def connexion(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
+                # Vérifie si le profil est complet
+                if not user.profil_complet:
+                    return redirect('users:infos_perso')
                 return redirect('users:homepage')
             else:
                 messages.error(request, 'E-mail ou mot de passe incorrect.')
@@ -41,6 +48,20 @@ def connexion(request):
     return render(request, 'users/connexion.html', {'form': form})
 
 
+
+@login_required
+def infos_perso(request):
+    user = request.user
+    if request.method == 'POST':
+        form = InfosPersoForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            user.profil_complet = True
+            user.save()
+            return redirect('users:homepage')
+    else:
+        form = InfosPersoForm(instance=user)
+    return render(request, 'users/infos_perso.html', {'form': form})
 
 def deconnexion(request):
     logout(request)

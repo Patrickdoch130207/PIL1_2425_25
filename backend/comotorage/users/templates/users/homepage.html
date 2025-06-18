@@ -16,7 +16,7 @@
             <a href="{% url 'users:homepage' %}"><img src="{% static 'users/images/logo_govibe.png' %}" alt="Logo GoVibe"></a>
         </div>
         <nav class="sidebar-menu">
-            <a href="#" class="menu-item">
+            <a href="{% url 'users:infos_perso' %}" class="menu-item">
                 <i class="fas fa-user"></i>Profile
             </a>
             <a href="{% url 'conversation_list' %}" class="menu-item">
@@ -63,17 +63,34 @@
             </div>
             <div class="d-flex align-items-center gap-3">
                 <!-- Message Icon -->
+                 <a href="{% url 'conversation_list' %}">
                 <div class="message-icon">
                     <i class="fas fa-comment-dots"></i>
                 </div>
+                </a>
+                
                 
                 <!-- User Profile -->
-                <div class="user-profile d-flex align-items-center">
+                
+                  <div class="user-profile d-flex align-items-center">
                     <div class="user-avatar">
-                        <img src="https://via.placeholder.com/40x40" alt="Photo de profil" class="profile-img">
+                        {% if user.photo_profil and user.photo_profil.url %}
+                            <img src="{{ user.photo_profil.url }}" alt="Photo de profil">
+                        {% else %}
+                            <img src="{% static 'users/images/profile_defaut.png' %}" alt="Photo de profil par défaut">
+                        {% endif %}
                     </div>
+                    <div id="avatar-lightbox" style="display:none;">
+                        <span id="close-lightbox">&times;</span>
+                        {% if user.photo_profil and user.photo_profil.url %}
+                            <img src="{{ user.photo_profil.url }}" alt="Photo de profil grand format">
+                        {% else %}
+                            <img src="{% static 'users/images/profile_defaut.png' %}" alt="Photo de profil par défaut">
+                        {% endif %}
+                    </div>
+                    </a>
                     <div class="user-info ms-2 d-none d-sm-block">
-                        <div class="user-name">Jean Dupont</div>
+                        <a href="{% url 'users:infos_perso' %}"><div class="user-name">{{ user.prenom }} {{ user.nom }}</div></a>
                     </div>
                 </div>
             </div>
@@ -87,5 +104,24 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'users/js/homepage.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var thumb = document.getElementById('avatar-thumb');
+        var lightbox = document.getElementById('avatar-lightbox');
+        var closeBtn = document.getElementById('close-lightbox');
+        if (thumb && lightbox && closeBtn) {
+            thumb.onclick = function() {
+                lightbox.style.display = 'flex';
+            };
+            closeBtn.onclick = function(e) {
+                e.stopPropagation();
+                lightbox.style.display = 'none';
+            };
+            lightbox.onclick = function(e) {
+                if(e.target === lightbox) lightbox.style.display = 'none';
+            };
+        }
+    });
+    </script>
 </body>
 </html>

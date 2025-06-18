@@ -14,7 +14,10 @@ class  Utilisateur(AbstractUser):
     ville=models.CharField(max_length=100,blank=True,null=True)
     pays=models.CharField(max_length=100,blank=True,null=True)
     sexe=models.CharField(max_length=10,choices=[('Homme','Homme'),('Femme','Femme')],blank=True,null=True)
-    photo_profil=models.ImageField(upload_to='',blank=True,null=True)
+    photo_profil = models.ImageField(upload_to='photos_profil/',blank=True,null=True, default='photos_profil/profile_defaut.png'  
+    )
+    role = models.CharField(max_length=20, choices=[('Passager', 'passager'), ('Conducteur', 'conducteur')],blank=True,null=True )
+    profil_complet = models.BooleanField(default=False)
 
         # Utiliser l'email comme identifiant de connexion
     USERNAME_FIELD = 'email'

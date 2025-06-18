@@ -5,86 +5,491 @@
     <meta charset="UTF-8">
     <title>Conversation avec {{ receiver.prenom }} {{ receiver.nom }} </title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'chat/css/conversation_detail.css' %}">
 </head>
-<body>
-<div class="container py-3">
-    <div class="chat-header mb-3">
-        <h5><i class="fas fa-user-circle"></i> {{ receiver.nom }} {{ receiver.prenom }}</h5>
-        <a href="{% url 'conversation_list' %}" class="btn btn-secondary btn-sm">Retour</a>
-    </div>
-    <div class="chat-messages mb-3" id="chatMessages" style="height: 400px; overflow-y: auto;">
-    {% for msg in messages %}
-        <div class="message {% if msg.sender == user %}sent{% else %}received{% endif %}">
-            <div class="msg-content">{{ msg.content }}</div>
-            <div class="msg-date text-muted small">{{ msg.timestamp|date:"d/m/Y H:i" }}</div>
-        </div>
-    {% endfor %}
-</div>
-{% if not messages %}
-    <div class="text-center text-muted">Aucun message dans cette conversation.</div>
-{% endif %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --accent-color: #28a745;
+    --whatsapp-green: #25d366;
+    --whatsapp-light-green: #dcf8c6;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --message-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: aliceblue;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+
+
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+/* Container principal */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    box-shadow: var(--card-shadow);
+    border-radius: 0;
+}
+
+/* Header du chat */
+.chat-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 0;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: headerSlide 0.8s ease-out;
+}
+
+@keyframes headerSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-header h5 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.chat-header .fas.fa-user-circle {
+    font-size: 1.8rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.chat-header .btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    padding: 0.5rem 1.2rem;
+}
+
+.chat-header .btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Zone des messages */
+.chat-messages {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0, 123, 255, 0.3);
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 123, 255, 0.5);
+}
+
+/* Messages */
+.message {
+    margin-bottom: 1rem;
+    max-width: 75%;
+    animation: messageSlide 0.5s ease-out;
+    position: relative;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.new-message {
+    animation: messageSlide 0.5s ease-out;
+}
+
+.msg-wrapper {
+    position: relative;
+}
+
+.msg-content {
+    padding: 1rem 1.3rem;
+    border-radius: 18px;
+    font-size: 1rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+    box-shadow: var(--message-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Message envoyé */
+.sent {
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.sent .msg-content {
+    background: linear-gradient(135deg,  #4b85f0);
+    color: white;
+    border-bottom-right-radius: 5px;
+    position: relative;
+}
+
+.sent .msg-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.sent:hover .msg-content::before {
+    left: 100%;
+}
+
+.sent .msg-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -8px;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-left-color: #128c7e;
+    border-bottom: none;
+    border-right: none;
+}
+
+/* Message reçu */
+.received {
+    align-self: flex-start;
+    margin-right: auto;
+}
+
+.received .msg-content {
+    background: white;
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom-left-radius: 5px;
+    position: relative;
+}
+
+.received .msg-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -8px;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-right-color: white;
+    border-bottom: none;
+    border-left: none;
+}
+
+.message:hover .msg-content {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Date du message */
+.msg-date {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.3rem;
+    text-align: right;
+}
+
+.received .msg-date {
+    color: #666;
+    text-align: left;
+}
+
+/* Zone de saisie */
+#messageForm {
+    padding: 1.5rem 2rem;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#messageInput {
+    flex: 1;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+#messageInput:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    background: white;
+    outline: none;
+}
+
+#messageForm button {
+    background: linear-gradient(135deg, var(--whatsapp-green), #128c7e);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+#messageForm button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+}
+
+#messageForm button:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+/* État vide */
+.text-center {
+    padding: 3rem 2rem;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.text-center .fas {
+    color: var(--primary-color);
+    opacity: 0.3;
+    margin-bottom: 1rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        border-radius: 0;
+    }
     
-    <form id="messageForm" class="d-flex" autocomplete="off">
-    <input type="text" id="messageInput" class="form-control me-2" placeholder="Tapez un message..." required>
-    <button type="submit" class="btn btn-primary">Envoyer</button>
-</form>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var chatMessages = document.getElementById('chatMessages');
-    if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    .chat-header,
+    .chat-messages,
+    #messageForm {
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-});
-</script>
-<script >
-    document.addEventListener('DOMContentLoaded', function() {
-    // Scroll auto
-    var chatMessages = document.getElementById('chatMessages');
-    if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    .message {
+        max-width: 85%;
     }
+    
+    .chat-header h5 {
+        font-size: 1.1rem;
+    }
+}
 
-    // WebSocket
-    const receiverEmail = "{{ receiver.email }}";
-    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
-    const ws_url = `${ws_scheme}://${window.location.host}/ws/chat/${encodeURIComponent(receiverEmail)}/`;
-    const chatSocket = new WebSocket(ws_url);
+@media (max-width: 576px) {
+    .msg-content {
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+    
+    #messageInput {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.95rem;
+    }
+    
+    #messageForm button {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+}
+</style>
+<body>
+    <!-- Animation de particules en arrière-plan -->
+   
 
-    const form = document.getElementById('messageForm');
-    const input = document.getElementById('messageInput');
+    <div class="container py-3">
+        <div class="chat-header mb-3">
+            <h5><i class="fas fa-user-circle"></i> {{ receiver.nom }} {{ receiver.prenom }}</h5>
+            <a href="{% url 'conversation_list' %}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i>Retour
+            </a>
+        </div>
+        
+        <div class="chat-messages mb-3" id="chatMessages" style="height: 400px; overflow-y: auto;">
+            {% for msg in messages %}
+                <div class="message {% if msg.sender == user %}sent{% else %}received{% endif %}">
+                    <div class="msg-wrapper">
+                        <div class="msg-content">{{ msg.content }}</div>
+                        <div class="msg-date text-muted small">{{ msg.timestamp|date:"d/m/Y H:i" }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if not messages %}
+            <div class="text-center text-muted">
+                <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                <br>Aucun message dans cette conversation.
+                <br><small>Commencez la conversation en envoyant un message !</small>
+            </div>
+        {% endif %}
+        
+        <form id="messageForm" class="d-flex" autocomplete="off">
+            <input type="text" id="messageInput" class="form-control me-2" placeholder="Tapez un message..." required>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane me-1"></i>Envoyer
+            </button>
+        </form>
+    </div>
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (input.value.trim() !== "") {
-            chatSocket.send(JSON.stringify({
-                'message': input.value
-            }));
-            input.value = "";
-        }
-    });
-
-    // Affichage en temps réel (optionnel, à adapter selon ton backend)
-        chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        if (data.message) {
-            const msgDiv = document.createElement('div');
-            // Compare l'expéditeur avec l'utilisateur courant
-            if (data.sender === "{{ user.email }}") {
-                msgDiv.className = "message sent";
-            } else {
-                msgDiv.className = "message received";
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-            msgDiv.innerHTML = `<div class="msg-content">${data.message}</div>
-                                <div class="msg-date text-muted small">${data.timestamp || ''}</div>`;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    };
-});
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll auto
+            var chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
 
-</script>
+            // WebSocket
+            const receiverEmail = "{{ receiver.email }}";
+            const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+            const ws_url = `${ws_scheme}://${window.location.host}/ws/chat/${encodeURIComponent(receiverEmail)}/`;
+            const chatSocket = new WebSocket(ws_url);
+
+            const form = document.getElementById('messageForm');
+            const input = document.getElementById('messageInput');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (input.value.trim() !== "") {
+                    chatSocket.send(JSON.stringify({
+                        'message': input.value
+                    }));
+                    input.value = "";
+                }
+            });
+
+            // Affichage en temps réel (optionnel, à adapter selon ton backend)
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                if (data.message) {
+                    const msgDiv = document.createElement('div');
+                    // Compare l'expéditeur avec l'utilisateur courant
+                    if (data.sender === "{{ user.email }}") {
+                        msgDiv.className = "message sent new-message";
+                    } else {
+                        msgDiv.className = "message received new-message";
+                    }
+                    msgDiv.innerHTML = `<div class="msg-wrapper">
+                                            <div class="msg-content">${data.message}</div>
+                                            <div class="msg-date text-muted small">${data.timestamp || new Date().toLocaleString('fr-FR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</div>
+                                        </div>`;
+                    chatMessages.appendChild(msgDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            };
+        });
+    </script>
 </body>
 </html>
