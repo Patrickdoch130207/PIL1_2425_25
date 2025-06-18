@@ -1,3 +1,4 @@
+
 from django.urls import path,include
 from . import views
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('reset_password/<int:id>/', views.reset_password, name='reset_password'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
 ]
+
 

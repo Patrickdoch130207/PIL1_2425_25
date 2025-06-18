@@ -90,9 +90,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'comotorage_db',
-        'USER':'groupe25',
-        'PASSWORD':'PIL1_2425_25',
-        'HOST':'localhost',
+        'USER':'chavez',
+        'PASSWORD':'chavez',
+        'HOST':'127.0.0.1',
         'PORT':'3306',
     }
 }
@@ -156,4 +156,5 @@ AUTH_USER_MODEL = 'users.Utilisateur'
 
 # Configuration pour la redirection après connexion
 LOGIN_URL = '/connexion/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accueil/'

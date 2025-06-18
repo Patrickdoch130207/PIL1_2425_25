@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes trajets réservés</title>
+    <link rel="stylesheet" href="{% static 'trajets/css/mes_reservations.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Mes trajets réservés</h1>
+
+        {% if reservations %}
+            <div class="trajets-list">
+                {% for res in reservations %}
+                    <div class="trajet-card">
+                        <h2>{{ res.trajet.depart }} → {{ res.trajet.destination }}</h2>
+                        <p><strong>Date :</strong> {{ res.trajet.date_depart|date:"d M Y" }} à {{ res.trajet.heure_depart }}</p>
+                        <p><strong>Conducteur :</strong>
+                            {{ res.trajet.conducteur.user.nom }} {{ res.trajet.conducteur.user.prenom }} 
+                            ({{ res.trajet.conducteur.user.username }})
+                        </p>
+                        <p><strong>Statut :</strong> 
+                            {% if res.statut == 'acceptee' %}
+                                ✅ Acceptée
+                            {% elif res.statut == 'en_attente' %}
+                                ⏳ En attente
+                            {% else %}
+                                ❌ Refusée
+                            {% endif %}
+                        </p>
+                        {% if res.statut == 'acceptee' %}
+                            <a class="btn-annuler" href="{% url 'annuler_reservation' res.id %}">Annuler la réservation</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-trajet">Vous n'avez aucune réservation pour le moment.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

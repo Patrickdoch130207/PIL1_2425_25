@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposer un trajet</title>
-    <link rel="stylesheet" href="{% static 'trajets/css/trajet_propose.css' %}">
+    <title>Demander un trajet</title>
+    <link rel="stylesheet" href="{% static 'trajets/css/trajet_demande.css' %}">
 </head>
 <body>
 
@@ -19,12 +19,11 @@
         {% endif %}
     </div>
     
-
     <div class="container">
         
-        <h1>Proposer un trajet</h1>
+        <h1>Demander un trajet</h1>
 
-        <form class="formulaire" method="post" action="{% url 'creer_trajet' %}" >
+        <form class="formulaire" method="post" action="{% url 'creer_demande_trajet' %}">
             {% csrf_token %}
 
             <label for="depart">Quelle est votre point de depart?</label>
@@ -38,9 +37,6 @@
 
             <label for="heure">Heure de départ :</label>
             <input type="time" id="heure" name="heure" required>
-
-            <label for="places">Nombre de places disponibles :</label>
-            <input type="number" id="places" name="sieges_dispo" min="1" required>
             
             <button type="submit">Soumettre</button>
             

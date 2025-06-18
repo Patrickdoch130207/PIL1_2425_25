@@ -1,12 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 import random
-from django.conf import settings
-
 
 # Create your models here.
-class Utilisateur(AbstractUser):
+
+class  Utilisateur(AbstractUser):
     id=models.AutoField(primary_key=True)
     nom=models.CharField(max_length=100)
     prenom=models.CharField(max_length=100)
@@ -17,25 +15,25 @@ class Utilisateur(AbstractUser):
     pays=models.CharField(max_length=100,blank=True,null=True)
     sexe=models.CharField(max_length=10,choices=[('Homme','Homme'),('Femme','Femme')],blank=True,null=True)
     photo_profil=models.ImageField(upload_to='',blank=True,null=True)
-    
 
-
-
-class PasswordResetCode(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    code=models.CharField(max_length=6)
-    created_at=models.DateTimeField(auto_now_add=True)
-
-    def generate_code(self):
-        self.code=str(random.randint(100000,999999))
-        self.save()
-
-    # Utiliser l'email comme identifiant de connexion
+        # Utiliser l'email comme identifiant de connexion
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nom', 'prenom']
     
     def __str__(self):
         return f"{self.prenom} {self.nom}"
+
+
+
+class PasswordResetCode(models.Model):
+    user=models.OneToOneField(Utilisateur,on_delete=models.CASCADE)
+    code=models.CharField(max_length=6)
+    created_at=models.DateTimeField(auto_now_add=True)
+
+    def generate_code(self):
+        self.code=str(random.randint(100000,999999))
+        
+
 
 
 

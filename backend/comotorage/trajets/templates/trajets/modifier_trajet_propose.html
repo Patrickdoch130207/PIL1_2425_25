@@ -4,27 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposer un trajet</title>
+    <title>Modification d'une proposition de trajet</title>
     <link rel="stylesheet" href="{% static 'trajets/css/trajet_propose.css' %}">
 </head>
 <body>
 
     <div class="message-container">
         {% if messages %}
-           {% for message in messages %}
-               {% if forloop.first %}
-                    <p class="message {{ message.tags }}">{{ message }}</p>
-               {% endif %}
-           {% endfor %}
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
         {% endif %}
     </div>
-    
 
     <div class="container">
         
-        <h1>Proposer un trajet</h1>
+        <h1>Modifiez votre proposition de trajet</h1>
 
-        <form class="formulaire" method="post" action="{% url 'creer_trajet' %}" >
+        <form class="formulaire" method="post" action="{% url 'modifier_trajet_propose' trajet.id %}" >
             {% csrf_token %}
 
             <label for="depart">Quelle est votre point de depart?</label>

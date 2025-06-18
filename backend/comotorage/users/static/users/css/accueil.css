@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         :root {
             --primary-color: #007bff;
@@ -96,6 +97,7 @@
         height: auto;
         display: block;
         margin: 0 auto;
+
 }
 
         @keyframes logoEntrance {
@@ -110,13 +112,15 @@
         }
 
         .logo img {
-            width: 120px;
-            height: 120px;
+            width: 80px;         /* adapte la taille ici selon connexion.html */
+            max-width: 100%;     /* pour la réactivité */
+            height: auto;
+            display: block;
+            margin: 0 auto;
             object-fit: contain;
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
             transition: transform 0.3s ease;
         }
-
         .logo img:hover {
             transform: scale(1.1) rotate(5deg);
         }
@@ -364,4 +368,8 @@
                 font-size: 1rem;
             }
         }
-  
+                @media (max-width: 576px) {
+            .logo img {
+                width: 60px;
+            }
+        }
