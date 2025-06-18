@@ -20,7 +20,7 @@ Le projet de cette année  consiste à réaliser une application web de comotora
    python -m venv env
 
 3- Activer l'environnement virtuel
-````    
+````
     # Sous Windows :
     env\Scripts\activate   
     
@@ -35,7 +35,7 @@ Le projet de cette année  consiste à réaliser une application web de comotora
 ````
     cd PIL1_2425_25\backend\comotorage    
 
-6- Configurer la base de donnée dans le fichier setting.py:
+6- Configurer la base de donnée dans le fichier settings.py:
 ````
    # Utilisation de MySQL:
     DATABASE = {
@@ -50,8 +50,8 @@ Le projet de cette année  consiste à réaliser une application web de comotora
     }  
 
 6- Appliquer les migrations
-   # Une fois l’environnement virtuel activé et ta base de données prête :
-`` 
+   # Une fois l’environnement virtuel activé et la base de données prête executez:
+ 
    python manage.py makemigrations
    python manage.py migrate
 
