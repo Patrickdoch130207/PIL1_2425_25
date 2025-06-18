@@ -28,8 +28,8 @@
                        <td>{{ demande.trajet.point_depart }} → {{ demande.trajet.destination }}</td>
                        <td>{{ demande.date_reservation|date:"d/m/Y H:i" }}</td>
                        <td>
-                          <a class="btn accept" href="{% url 'traiter_reservation' demande.id 'accepter' %}">✔️ Accepter</a>
-                          <a class="btn decline" href="{% url 'traiter_reservation' demande.id 'refuser' %}">❌ Refuser</a>
+                          <a class="btn accept" href="{% url 'trajets:traiter_reservation' demande.id 'accepter' %}">✔️ Accepter</a>
+                          <a class="btn decline" href="{% url 'trajets:traiter_reservation' demande.id 'refuser' %}">❌ Refuser</a>
                        </td>
                   </tr>
                {% endfor %}

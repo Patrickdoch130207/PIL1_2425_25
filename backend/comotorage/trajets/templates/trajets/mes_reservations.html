@@ -30,7 +30,7 @@
                             {% endif %}
                         </p>
                         {% if res.statut == 'acceptee' %}
-                            <a class="btn-annuler" href="{% url 'annuler_reservation' res.id %}">Annuler la réservation</a>
+                            <a class="btn-annuler" href="{% url 'trajets:annuler_reservation' res.id %}">Annuler la réservation</a>
                         {% endif %}
                     </div>
                 {% endfor %}

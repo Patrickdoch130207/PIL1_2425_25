@@ -17,7 +17,7 @@
     <p>Proximité départ : {{ match.distance_depart }} km</p>
     <p>Proximité arrivée : {{ match.distance_arrivee }} km</p>
     <p>Décalage horaire : {{ match.delta_horaire_min }} min</p>
-    <button class="reserver"><a href="{% url 'reserver_trajet' match.trajet.id %}">Reserver</a></button>
+    <button class="reserver"><a href="{% url 'trajets:reserver_trajet' match.trajet.id %}">Reserver</a></button>
   </div>
 {% empty %}
   <p>Aucun trajet ne correspond à cette demande.</p>

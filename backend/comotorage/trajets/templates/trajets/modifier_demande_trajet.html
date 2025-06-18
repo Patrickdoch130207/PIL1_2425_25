@@ -21,7 +21,7 @@
     
         <h1>Modifiez votre demande de trajet</h1>
 
-        <form class="formulaire" method="post" action="{% url 'modifier_demande_trajet' demande.id %}">
+        <form class="formulaire" method="post" action="{% url 'trajets:modifier_demande_trajet' demande.id %}">
             {% csrf_token %}
 
             <label for="depart">Quelle est votre point de depart?</label>

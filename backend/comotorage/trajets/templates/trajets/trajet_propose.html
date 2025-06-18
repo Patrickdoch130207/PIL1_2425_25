@@ -24,7 +24,7 @@
         
         <h1>Proposer un trajet</h1>
 
-        <form class="formulaire" method="post" action="{% url 'creer_trajet' %}" >
+        <form class="formulaire" method="post" action="{% url 'trajets:creer_trajet' %}" >
             {% csrf_token %}
 
             <label for="depart">Quelle est votre point de depart?</label>

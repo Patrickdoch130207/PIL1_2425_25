@@ -1,100 +1,100 @@
-from django.shortcuts import render,get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from trajets.models import Trajet
+from trajets.models import Trajet, DemandeTrajet, Reservation
 from django.contrib.auth import login
 from django.contrib import messages
 from users.models import Utilisateur
 from .utils.geocoding import geocode
+from .utils.osrm import get_osrm_route_info
+from django.contrib.auth.decorators import login_required
+from datetime import datetime, timedelta
 
-
-
-# Create your views here.
-
-#Creation de trajets par les conducteurs
-
+# Création de trajets par les conducteurs
+@login_required
 def creer_trajet(request):
-    if request.method=='POST':
-        point_depart=request.POST.get('depart')
-        destination=request.POST.get('destination')
-        date_depart=request.POST.get('date')
-        heure_depart=request.POST.get('heure')
-        sieges_dispo=request.POST.get('sieges_dispo')
-        conducteur=Utilisateur.objects.get(user=request.user)
+    if request.method == 'POST':
+        point_depart = request.POST.get('depart')
+        destination = request.POST.get('destination')
+        date_depart = request.POST.get('date')
+        heure_depart = request.POST.get('heure')
+        sieges_dispo = request.POST.get('sieges_dispo')
+        conducteur = request.user
 
         if point_depart and destination and date_depart and heure_depart:
-           lat_dep,lon_dep = geocode(point_depart)
-           lat_dest,lon_dest = geocode(destination)
-           if None in (lat_dep, lon_dep, lat_dest, lon_dest):
+            lat_dep, lon_dep = geocode(point_depart)
+            lat_dest, lon_dest = geocode(destination)
+            if None in (lat_dep, lon_dep, lat_dest, lon_dest):
                 messages.error(request, "Impossible de localiser une des adresses. Vérifiez les noms de lieux.")
                 return render(request, 'trajets/trajet_propose.html')
 
-           Trajet.objects.create(
-              point_depart=point_depart,
-              destination=destination,
-              date_depart=date_depart,
-              heure_depart=heure_depart,
-              sieges_dispo=sieges_dispo,
-              conducteur=conducteur,
-              depart_latitude=lat_dep,
-              depart_longitude=lon_dep,
-              dest_latitude=lat_dest,
-              dest_longitude=lon_dest
+            Trajet.objects.create(
+                point_depart=point_depart,
+                destination=destination,
+                date_depart=date_depart,
+                heure_depart=heure_depart,
+                sieges_dispo=sieges_dispo,
+                conducteur=conducteur,
+                depart_latitude=lat_dep,
+                depart_longitude=lon_dep,
+                dest_latitude=lat_dest,
+                dest_longitude=lon_dest
             )
-           messages.success(request, "Votre trajet a été publié !")
-           return redirect('liste_trajets') 
+            messages.success(request, "Votre trajet a été publié !")
+            return redirect('trajets:liste_trajets')
         else:
-           messages.error(request, "Veuillez remplir tous les champs.")
-        
-    return render(request,'trajets/trajet_propose.html')
-    
-#Liste des trajets 
+            messages.error(request, "Veuillez remplir tous les champs.")
 
+    return render(request, 'trajets/trajet_propose.html')
+
+# Liste des trajets
+@login_required
 def liste_trajets(request):
-    utilisateur=Utilisateur.objects.get(user=request.user)
-    trajets=Trajet.objects.filter(conducteur=utilisateur)
-    return render(request,'trajets/liste_trajets.html',{'trajets':trajets})
+    utilisateur = request.user
+    trajets = Trajet.objects.filter(conducteur=utilisateur)
+    return render(request, 'trajets/liste_trajets.html', {'trajets': trajets})
 
+@login_required
 def liste_demande_trajet(request):
-    utilisateur=Utilisateur.objects.get(user=request.user)
-    demandes=DemandeTrajet.objects.filter(passager=utilisateur)
-    return render(request,'trajets/liste_demande_trajet.html',{'demandes':demandes})
+    utilisateur = request.user
+    demandes = DemandeTrajet.objects.filter(passager=utilisateur)
+    return render(request, 'trajets/liste_demande_trajet.html', {'demandes': demandes})
 
-def detail_trajet(request,id):
-    trajet=get_object_or_404(Trajet,id=id)
-    return render(request,'trajets/detail_trajet.html',{'trajets':trajet})
+@login_required
+def detail_trajet(request, id):
+    trajet = get_object_or_404(Trajet, id=id)
+    return render(request, 'trajets/detail_trajet.html', {'trajets': trajet})
 
-#Suppression de trajets
-
-def supprimer_trajet(request,id):
-    trajet=get_object_or_404(Trajet,id=id)
+# Suppression de trajets
+@login_required
+def supprimer_trajet(request, id):
+    trajet = get_object_or_404(Trajet, id=id)
     trajet.delete()
-    return redirect ('liste_trajets')
+    return redirect('trajets:liste_trajets')
 
-def supprimer_demande_trajet(request,id):
-    demande=get_object_or_404(DemandeTrajet,id=id)
+@login_required
+def supprimer_demande_trajet(request, id):
+    demande = get_object_or_404(DemandeTrajet, id=id)
     demande.delete()
-    return redirect('liste_demande_trajet')
+    return redirect('trajets:liste_demande_trajet')
 
-#Demande de trajet par les passagers
-
-from trajets.models import DemandeTrajet
-
+# Demande de trajet par les passagers
+@login_required
 def creer_demande_trajet(request):
-    if request.method=='POST':
-        point_depart=request.POST.get('depart')
-        destination=request.POST.get('destination')
-        date_depart=request.POST.get('date')
-        heure_depart=request.POST.get('heure')
+    if request.method == 'POST':
+        point_depart = request.POST.get('depart')
+        destination = request.POST.get('destination')
+        date_depart = request.POST.get('date')
+        heure_depart = request.POST.get('heure')
         if point_depart and destination and date_depart and heure_depart:
-           lat_dep,lon_dep = geocode(point_depart)
-           lat_dest,lon_dest = geocode(destination)
+            lat_dep, lon_dep = geocode(point_depart)
+            lat_dest, lon_dest = geocode(destination)
 
-           if None in (lat_dep, lon_dep, lat_dest, lon_dest):
+            if None in (lat_dep, lon_dep, lat_dest, lon_dest):
                 messages.error(request, "Impossible de localiser une des adresses. Vérifiez les noms de lieux.")
                 return render(request, 'trajets/trajet_demande.html')
-           
-           DemandeTrajet.objects.create(
-                passager=Utilisateur.objects.get(user=request.user),
+
+            DemandeTrajet.objects.create(
+                passager=request.user,
                 point_depart=point_depart,
                 destination=destination,
                 date_depart=date_depart,
@@ -104,24 +104,20 @@ def creer_demande_trajet(request):
                 dest_latitude=lat_dest,
                 dest_longitude=lon_dest
             )
-           messages.success(request, "Votre demande de trajet a été créée avec succès !")
-           return redirect('liste_demande_trajet') 
+            messages.success(request, "Votre demande de trajet a été créée avec succès !")
+            return redirect('trajets:liste_demande_trajet')
         else:
             messages.error(request, "Veuillez remplir tous les champs.")
 
-    return render(request,'trajets/trajet_demande.html')
+    return render(request, 'trajets/trajet_demande.html')
 
-#Reservation de trajets
-
-from django.contrib.auth.decorators import login_required
-from trajets.models import Trajet,Reservation
-
+# Réservation de trajets
 @login_required
 def reserver_trajet(request, trajet_id):
     trajet = get_object_or_404(Trajet, id=trajet_id)
-    utilisateur=Utilisateur.objects.get(user=request.user)
+    utilisateur = request.user
     if utilisateur in trajet.passagers.all():
-        messages.info(request,'Vous avez déjà réservé ce trajet.')
+        messages.info(request, 'Vous avez déjà réservé ce trajet.')
 
     if Reservation.objects.filter(trajet=trajet, passager=utilisateur).exists():
         messages.info(request, 'Vous avez déjà fait une demande pour ce trajet.')
@@ -131,21 +127,21 @@ def reserver_trajet(request, trajet_id):
         Reservation.objects.create(trajet=trajet, passager=utilisateur)
         messages.success(request, "Demande envoyée. En attente de confirmation du conducteur.")
 
-    return redirect('liste_demande_trajet')
+    return redirect('trajets:liste_demande_trajet')
 
 @login_required
 def mes_reservations(request):
-    utilisateur = Utilisateur.objects.get(user=request.user)
-    reservations = Reservation.objects.filter(passager=utilisateur,statut='acceptee')
+    utilisateur = request.user
+    reservations = Reservation.objects.filter(passager=utilisateur, statut='acceptee')
 
     return render(request, 'trajets/mes_reservations.html', {
         'reservations': reservations
     })
 
 @login_required
-def annuler_reservation(request,id):
-    reservation = get_object_or_404(Reservation,id=id)
-    utilisateur = Utilisateur.objects.get(user=request.user)
+def annuler_reservation(request, id):
+    reservation = get_object_or_404(Reservation, id=id)
+    utilisateur = request.user
 
     if reservation.passager == utilisateur and reservation.statut == 'acceptee':
         reservation.delete()
@@ -153,11 +149,11 @@ def annuler_reservation(request,id):
     else:
         messages.warning(request, "Impossible d'annuler cette réservation.")
 
-    return redirect('mes_reservations')
+    return redirect('trajets:mes_reservations')
 
 @login_required
 def gerer_reservations(request):
-    utilisateur = Utilisateur.objects.get(user=request.user)
+    utilisateur = request.user
     trajets = Trajet.objects.filter(conducteur=utilisateur)
     demandes = Reservation.objects.filter(trajet__in=trajets, statut='en_attente')
 
@@ -168,9 +164,9 @@ def gerer_reservations(request):
 @login_required
 def traiter_reservation(request, reservation_id, action):
     reservation = get_object_or_404(Reservation, id=reservation_id)
-    if reservation.trajet.conducteur != Utilisateur.objects.get(user=request.user):
+    if reservation.trajet.conducteur != request.user:
         messages.error(request, "Action non autorisée.")
-        return redirect('gerer_reservations')
+        return redirect('trajets:gerer_reservations')
 
     if action == 'accepter':
         if reservation.trajet.sieges_dispo > reservation.trajet.reservations.filter(statut='acceptee').count():
@@ -184,66 +180,60 @@ def traiter_reservation(request, reservation_id, action):
         reservation.save()
         messages.info(request, "Réservation refusée.")
 
-    return redirect('gerer_reservations')
+    return redirect('trajets:gerer_reservations')
 
-
-
-#Modifier une proposition de trajet 
+# Modifier une proposition de trajet 
 @login_required
 def modifier_trajet_propose(request, id):
     trajet = get_object_or_404(Trajet, id=id)
-    conducteur = Utilisateur.objects.get(user=request.user)
+    conducteur = request.user
 
     # S'assurer que seul le conducteur du trajet peut modifier
     if trajet.conducteur != conducteur:
         messages.error(request, "Vous n’êtes pas autorisé à modifier ce trajet.")
-        return redirect('liste_trajets')
+        return redirect('trajets:liste_trajets')
 
     if request.method == 'POST':
-
-        # Recuperation des nouvelles valeurs depuis l’URL
         depart = request.POST.get('depart')
         destination = request.POST.get('destination')
         date_depart = request.POST.get('date')
         heure_depart = request.POST.get('heure')
         sieges_dispo = request.POST.get('sieges_dispo')
 
-        # Verifier que tous les champs requis sont présents
         if depart and destination and date_depart and heure_depart:
-
-           lon_dep,lat_dep = geocode(depart)
-           lon_dest,lat_dest = geocode(destination)
-           if None in (lat_dep, lon_dep, lat_dest, lon_dest):
+            lat_dep, lon_dep = geocode(depart)
+            lat_dest, lon_dest = geocode(destination)
+            if None in (lat_dep, lon_dep, lat_dest, lon_dest):
                 messages.error(request, "Impossible de localiser une des adresses. Vérifiez les noms de lieux.")
                 return render(request, 'trajets/modifier_trajet_propose.html')
 
-           trajet.point_depart = depart
-           trajet.destination = destination
-           trajet.date_depart = date_depart
-           trajet.heure_depart = heure_depart
-           trajet.sieges_dispo = sieges_dispo
-           trajet.depart_latitude=lat_dep
-           trajet.depart_longitude=lon_dep
-           trajet.dest_latitude=lat_dest
-           trajet.dest_longitude=lon_dest
-           trajet.save()
-           messages.success(request, "Le trajet a été modifié avec succès.")
-           return redirect('liste_trajets')
+            trajet.point_depart = depart
+            trajet.destination = destination
+            trajet.date_depart = date_depart
+            trajet.heure_depart = heure_depart
+            trajet.sieges_dispo = sieges_dispo
+            trajet.depart_latitude = lat_dep
+            trajet.depart_longitude = lon_dep
+            trajet.dest_latitude = lat_dest
+            trajet.dest_longitude = lon_dest
+            trajet.save()
+            messages.success(request, "Le trajet a été modifié avec succès.")
+            return redirect('trajets:liste_trajets')
         else:
             messages.error(request, "Tous les champs doivent être remplis.")
 
     return render(request, 'trajets/modifier_trajet_propose.html', {'trajet': trajet})
 
-#Modification trajet cote passager
-
+# Modification trajet côté passager
+@login_required
 def modifier_demande_trajet(request, id):
     demande = get_object_or_404(DemandeTrajet, id=id)
-    passager = Utilisateur.objects.get(user=request.user)
+    passager = request.user
 
-    # Verifier si le passager est bien l’auteur de la demande
+    # Vérifier si le passager est bien l’auteur de la demande
     if demande.passager != passager:
         messages.error(request, "Vous n’êtes pas autorisé à modifier cette demande.")
-        return redirect('liste_trajets')
+        return redirect('trajets:liste_trajets')
 
     if request.method == 'POST':
         depart = request.POST.get('depart')
@@ -252,48 +242,39 @@ def modifier_demande_trajet(request, id):
         heure_depart = request.POST.get('heure')
 
         if depart and destination and date_depart and heure_depart:
-
-           lat_dep,lon_dep = geocode(depart)
-           lat_dest,lon_dest = geocode(destination)
-           if None in (lat_dep, lon_dep, lat_dest, lon_dest):
+            lat_dep, lon_dep = geocode(depart)
+            lat_dest, lon_dest = geocode(destination)
+            if None in (lat_dep, lon_dep, lat_dest, lon_dest):
                 messages.error(request, "Impossible de localiser une des adresses. Vérifiez les noms de lieux.")
                 return render(request, 'trajets/modifier_trajet_propose.html')
 
-           demande.point_depart = depart
-           demande.destination = destination
-           demande.date_depart = date_depart
-           demande.heure_depart = heure_depart
-           demande.depart_latitude=lat_dep
-           demande.depart_longitude=lon_dep
-           demande.dest_latitude=lat_dest
-           demande.dest_longitude=lon_dest
-           demande.save()
-            
-           messages.success(request, "Votre demande a été mise à jour.")
-           return redirect('liste_demande_trajet')
+            demande.point_depart = depart
+            demande.destination = destination
+            demande.date_depart = date_depart
+            demande.heure_depart = heure_depart
+            demande.depart_latitude = lat_dep
+            demande.depart_longitude = lon_dep
+            demande.dest_latitude = lat_dest
+            demande.dest_longitude = lon_dest
+            demande.save()
+            messages.success(request, "Votre demande a été mise à jour.")
+            return redirect('trajets:liste_demande_trajet')
         else:
             messages.error(request, "Tous les champs sont requis.")
 
     return render(request, 'trajets/modifier_demande_trajet.html', {'demande': demande})
 
-#Algorithme de matching
-
-from .models import Trajet, DemandeTrajet
-from users.models import Utilisateur
-from .utils.osrm import get_osrm_route_info
-from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
-
+# Algorithme de matching
 @login_required
 def matching_trajets(request, id):
-    demande = DemandeTrajet.objects.get(id=id)
-    utilisateur = Utilisateur.objects.get(user=request.user)
+    demande = get_object_or_404(DemandeTrajet, id=id)
+    utilisateur = request.user
 
-    #Geocodage
+    # Geocodage
     if not demande.depart_latitude or not demande.depart_longitude:
-        demande.depart_latitude,demande.depart_longitude=geocode(demande.point_depart)
+        demande.depart_latitude, demande.depart_longitude = geocode(demande.point_depart)
     if not demande.dest_latitude or not demande.dest_longitude:
-        demande.dest_latitude,demande.dest_longitude=geocode(demande.destination)
+        demande.dest_latitude, demande.dest_longitude = geocode(demande.destination)
 
     correspondances = []
     trajets = Trajet.objects.exclude(conducteur=utilisateur).filter(
@@ -302,11 +283,10 @@ def matching_trajets(request, id):
     )
 
     for trajet in trajets:
-
         if not trajet.depart_latitude or not trajet.depart_longitude:
-            trajet.depart_latitude,trajet.depart_longitude=geocode(trajet.point_depart)
+            trajet.depart_latitude, trajet.depart_longitude = geocode(trajet.point_depart)
         if not trajet.dest_latitude or not trajet.dest_longitude:
-            trajet.dest_latitude,trajet.dest_longitude=geocode(trajet.destination)
+            trajet.dest_latitude, trajet.dest_longitude = geocode(trajet.destination)
 
         route_dep = get_osrm_route_info(
             demande.depart_longitude, demande.depart_latitude,
@@ -334,7 +314,3 @@ def matching_trajets(request, id):
         "demande": demande,
         "correspondances": correspondances
     })
-
-
-
-

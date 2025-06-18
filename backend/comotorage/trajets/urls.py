@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from trajets import views
 
+app_name = 'trajets'
 urlpatterns=[
     path('trajet_propose/',views.creer_trajet,name='creer_trajet'),
     path('trajet_demande/', views.creer_demande_trajet, name='creer_demande_trajet'),

@@ -22,8 +22,8 @@
                     <p>Heure: {{ trajet.heure_depart }}</p>
                     <p>Places disponibles: {{ trajet.sieges_dispo }}</p>
                     <div class="end">
-                        <button class="suppression"><a href="{% url 'supprimer_trajet' trajet.id %}">Supprimer</a></button>
-                        <button class="modifier"><a href="{% url 'modifier_trajet_propose' trajet.id %}">Modifier</a></button>
+                        <button class="suppression"><a href="{% url 'trajets:supprimer_trajet' trajet.id %}">Supprimer</a></button>
+                        <button class="modifier"><a href="{% url 'trajets:modifier_trajet_propose' trajet.id %}">Modifier</a></button>
                     </div>
                     
                 </div>
