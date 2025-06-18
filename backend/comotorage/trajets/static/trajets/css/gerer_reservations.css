@@ -1,0 +1,54 @@
+.reservation-container {
+    width: 90%;
+    max-width: 960px;
+    margin: 2rem auto;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .reservation-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  th, td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #eee;
+  }
+  
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .accept {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .decline {
+    background-color: #dc3545;
+    color: white;
+  }
+  

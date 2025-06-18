@@ -82,3 +82,20 @@ a.lien-soumettre {
 a.lien-soumettre:hover {
     background-color:blue;
 }
+
+.message-container {
+    position: absolute;
+    top: -10px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    text-align: center;
+    z-index: 1000;
+  }
+  
+.message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+}

@@ -5,26 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proposer un trajet</title>
-    <link rel="stylesheet" href="{% static 'users/css/trajet_propose.css' %}">
+    <link rel="stylesheet" href="{% static 'trajets/css/trajet_propose.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Détail d'un trajet</h1>
-        <h2>Proposer un trajet</h2>
 
-        <form class="formulaire">
+    <div class="message-container">
+        {% if messages %}
+           {% for message in messages %}
+               {% if forloop.first %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+               {% endif %}
+           {% endfor %}
+        {% endif %}
+    </div>
+    
+
+    <div class="container">
+        
+        <h1>Proposer un trajet</h1>
+
+        <form class="formulaire" method="post" action="{% url 'trajets:creer_trajet' %}" >
+            {% csrf_token %}
+
+            <label for="depart">Quelle est votre point de depart?</label>
+            <input type="text" id="depart" name="depart" required>
+
             <label for="destination">Quelle est votre destination ?</label>
-            <input type="text" id="destination" name="destination">
+            <input type="text" id="destination" name="destination" required>
 
             <label for="date">Date :</label>
-            <input type="date" id="date" name="date">
+            <input type="date" id="date" name="date" required>
 
             <label for="heure">Heure de départ :</label>
-            <input type="time" id="heure" name="heure">
+            <input type="time" id="heure" name="heure" required>
 
             <label for="places">Nombre de places disponibles :</label>
-            <input type="number" id="places" name="places" min="1">
-            <a href="#" class="lien-soumettre">Soumettre</a>
+            <input type="number" id="places" name="sieges_dispo" min="1" required>
+            
+            <button type="submit">Soumettre</button>
             
         </form>
 

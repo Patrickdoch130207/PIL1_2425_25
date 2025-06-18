@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'acceuil</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'users/css/homepage.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">
+            <a href="{% url 'users:homepage' %}"><img src="{% static 'users/images/logo_govibe.png' %}" alt="Logo GoVibe"></a>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="{% url 'users:infos_perso' %}" class="menu-item">
+                <i class="fas fa-user"></i>Profile
+            </a>
+            <a href="{% url 'conversation_list' %}" class="menu-item">
+                <i class="fas fa-envelope"></i>Messages
+            </a>
+            <a href="{% url 'trajets:creer_trajet' %}" class="menu-item">
+                <i class="fas fa-chart-bar"></i>Proposer un trajet
+            </a>
+            <a href="{% url 'trajets:liste_trajets' %}" class="menu-item">
+                <i class="fas fa-tasks"></i>Trajets proposés
+            </a>
+            <a href="{% url 'trajets:mes_reservations' %}" class="menu-item">
+                <i class="fas fa-users"></i>Réservations
+            </a>
+            <hr style="border-color: #2d3748; margin: 1rem 0;">
+            <div class="px-3 py-2">
+                <small class="text-muted">GENERAL</small>
+            </div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-bell"></i>Notifications
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>Paramètres
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>Déconnexion
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="d-flex align-items-center flex-grow-1">
+                <button class="btn btn-link d-md-none me-3" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 class="mb-0 me-4"></h2>
+                <div class="search-bar flex-grow-1 me-4" style="display: flex; align-items: center;">
+                    <a href="{% url 'trajets:creer_demande_trajet' %}"><button class="btn-blue">Rechercher un trajet</button></a>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Message Icon -->
+                 <a href="{% url 'conversation_list' %}">
+                <div class="message-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                </a>
+                
+                
+                <!-- User Profile -->
+                
+                  <div class="user-profile d-flex align-items-center">
+                    <div class="user-avatar">
+                        {% if user.photo_profil and user.photo_profil.url %}
+                            <img src="{{ user.photo_profil.url }}" alt="Photo de profil">
+                        {% else %}
+                            <img src="{% static 'users/images/profile_defaut.png' %}" alt="Photo de profil par défaut">
+                        {% endif %}
+                    </div>
+                    <div id="avatar-lightbox" style="display:none;">
+                        <span id="close-lightbox">&times;</span>
+                        {% if user.photo_profil and user.photo_profil.url %}
+                            <img src="{{ user.photo_profil.url }}" alt="Photo de profil grand format">
+                        {% else %}
+                            <img src="{% static 'users/images/profile_defaut.png' %}" alt="Photo de profil par défaut">
+                        {% endif %}
+                    </div>
+                    </a>
+                    <div class="user-info ms-2 d-none d-sm-block">
+                        <a href="{% url 'users:infos_perso' %}"><div class="user-name">{{ user.prenom }} {{ user.nom }}</div></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="row mb-4">
+           <!-- Contenu à ajouter ici -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'users/js/homepage.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var thumb = document.getElementById('avatar-thumb');
+        var lightbox = document.getElementById('avatar-lightbox');
+        var closeBtn = document.getElementById('close-lightbox');
+        if (thumb && lightbox && closeBtn) {
+            thumb.onclick = function() {
+                lightbox.style.display = 'flex';
+            };
+            closeBtn.onclick = function(e) {
+                e.stopPropagation();
+                lightbox.style.display = 'none';
+            };
+            lightbox.onclick = function(e) {
+                if(e.target === lightbox) lightbox.style.display = 'none';
+            };
+        }
+    });
+    </script>
+</body>
+</html>

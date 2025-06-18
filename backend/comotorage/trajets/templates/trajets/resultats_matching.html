@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultats Matching</title>
+    <link rel="stylesheet" href="{% static 'trajets/css/resultats_matching.css' %}">
+</head>
+<body>
+    {% for match in correspondances %}
+  <div class="card">
+    <h4>Trajet de {{ match.trajet.conducteur.user.username }}</h4>
+    <p>De {{ match.trajet.point_depart }} à {{ match.trajet.destination }}</p>
+    <p>Départ : {{ match.trajet.heure_depart }} — Date : {{ match.trajet.date_depart|date:"d M Y" }}</p>
+    <p>Places disponibles : {{ match.trajet.sieges_dispo }}</p>
+    <p>Proximité départ : {{ match.distance_depart }} km</p>
+    <p>Proximité arrivée : {{ match.distance_arrivee }} km</p>
+    <p>Décalage horaire : {{ match.delta_horaire_min }} min</p>
+    <button class="reserver"><a href="{% url 'trajets:reserver_trajet' match.trajet.id %}">Reserver</a></button>
+  </div>
+{% empty %}
+  <p>Aucun trajet ne correspond à cette demande.</p>
+{% endfor %}
+</body>
+</html>

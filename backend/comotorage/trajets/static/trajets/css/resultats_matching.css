@@ -1,0 +1,80 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  h4 {
+    margin-top: 0;
+    color: #343a40;
+    font-size: 1.25rem;
+  }
+  
+  .card {
+    background: #ffffff;
+    border-radius: 8px;
+    width: 30%;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .card p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95rem;
+    font-weight: bold;
+  }
+  
+  .card strong {
+    color: #212529;
+  }
+  
+  a.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #0d6efd;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  a.btn:hover {
+    background: #0b5ed7;
+  }
+  
+  .alert {
+    background: #fff3cd;
+    border-left: 6px solid #ffc107;
+    padding: 16px;
+    margin-top: 20px;
+    border-radius: 6px;
+    color: #856404;
+    font-weight: 500;
+    text-align: center;
+  }
+  .reserver{
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reserver:hover {
+    background-color: #218838;
+}
+
+a{
+  text-decoration: none;
+}

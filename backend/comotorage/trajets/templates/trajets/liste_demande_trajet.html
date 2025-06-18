@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des demandes de trajets</title>
+    <link rel="stylesheet" href="{% static 'trajets/css/liste_demande_trajet.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Demandes de trajets</h1>
+    </header>
+
+    <main>
+        <section class="trajets-container">
+            {% for demande in demandes %}
+                <div class="trajet">
+                    <h2>Départ: {{ demande.point_depart }}</h2>
+                    <p>Destination: {{ demande.destination }}</p>
+                    <p>Date: {{ demande.date_depart }}</p>
+                    <p>Heure: {{ demande.heure_depart }}</p>
+                    <div class="end">
+                       <button class="suppression"><a href="{% url 'trajets:supprimer_demande_trajet' demande.id %}">Supprimer</a></button>
+                       <button class="modifier"><a href="{% url 'trajets:modifier_demande_trajet' demande.id %}">Modifier</a></button>
+                       <button class="recherche"><a href="{% url 'trajets:matching_trajets'  demande.id %}">Rechercher</a></button>
+                    </div>
+                </div>
+            {% empty %}
+                <p> Vous n'avez effectué aucune demande de trajet pour le moment.</p>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>
