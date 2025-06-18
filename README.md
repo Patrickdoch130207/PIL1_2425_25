@@ -1,15 +1,8 @@
-# PIL1_2425_25
-Chaque année, l'Institut de Formation et de Recherche en Informatique (IFRI) incluent dans le programme universitaire un projet intégrateur visant à permettre aux étudiants de travailler sur un problème concret en groupe, leur permettant de proposer des solutions pratiques en se basant sur les enseignements reçus au cours de l'année.
-Le projet de cette année  consiste à réaliser une application web de comotorage qui met  en relation des étudiants d'IFRI souhaitant partager leurs trajet quotidients entre leur domicile et le campus.
 
- A l'occasion de ce projet nous avons eu à créer GoVibe, une application de comotorage simple qui permet aux utilisateurs de proposer ou rechercher des trajets. Développée avec Django, HTML, CSS et JavaScript.
- 
- # Fonctionnalités principales
- - Mise en place du système d'authentification (inscription, connexion, déconnexion, reinitialisation du mot de passe)
- - Fonctionnalités de demande de trajets
- - Recherche de trajets disponibles
- - Système de messagerie entre conducteurs et passager
+Chaque année, l'Institut de Formation et de Recherche en Informatique (IFRI) inclut dans le programme universitaire un projet intégrateur visant à permettre aux étudiants de travailler sur un problème concret en groupe, leur permettant de proposer des solutions pratiques en se basant sur les enseignements reçus au cours de l'année.
+Le projet de cette année consiste à réaliser une application web de covoiturage qui met en relation des étudiants d'IFRI souhaitant partager leurs trajets quotidiens entre leur domicile et le campus.
 
+À cette occasion, nous avons créé GoVibe, une application de covoiturage simple qui permet aux utilisateurs de proposer ou rechercher des trajets. Elle est développée avec Django, HTML, CSS et JavaScript.
  # Installation du projet
  1- Cloner le depôt:
 ```bash
@@ -68,3 +61,5 @@ Le projet de cette année  consiste à réaliser une application web de comotora
 - Python / Django
 - HTML / CSS / JavaScript
 - Git et GitHub
+
+
