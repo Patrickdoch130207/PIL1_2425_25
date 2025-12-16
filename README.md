@@ -6,7 +6,7 @@ Le projet de cette année consiste à réaliser une application web de covoitura
  # Installation du projet
  1- Cloner le depôt:
 ```bash
-       git clone https://github.com/ton_nom_utilisateur/PIL1_2425_25.git
+       git clone https://github.com/Patrickdoch130207/PIL1_2425_25.git
 
 2- Créer un environnement virtuel
 ````
